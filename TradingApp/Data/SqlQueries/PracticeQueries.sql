@@ -91,20 +91,28 @@ Count the number of orders per instrument, showing only instruments with more th
 Find traders who have executed more than 3 trades total (HAVING COUNT > 3).
 For each instrument, compute total traded quantity and average trade price; show only instruments with total quantity > some threshold.
 Find desks (group by Trader.Desk) where the combined MaxOrderNotional exceeds 3,000,000.
+
+
 INSERT
 Insert a new trader "Dana" on the "Crypto" desk with a MaxOrderNotional of 750,000.
 Insert a new instrument "BTCUSD" with AssetClass and Currency.
 Insert a new order for trader "Dana" on "BTCUSD", then insert a matching trade against it (two INSERTs, using the generated OrderId).
 Use INSERT INTO ... SELECT to copy all Equity-desk traders into an (imaginary) ArchivedTraders table.
+
+
 UPDATE
 Give every trader on the "Equity" desk a 10% increase to MaxOrderNotional.
 Update the Status of all orders that have at least one matching Trade to 'Filled'.
 Update an instrument's Currency using a CASE expression based on AssetClass.
 Update Trader.MaxOrderNotional for trader "Bob" only if his current trade count exceeds 5 (subquery in WHERE).
+
+
 DELETE
 Delete all trades belonging to orders with Status = 'Cancelled'.
 Delete traders who have never placed an order (careful with FK constraints — think about order of operations).
 Delete duplicate trades that share the same OrderId, InstrumentId, and TraderId, keeping only the lowest Id (classic dedup exercise — good self-join or window function practice).
+
+
 COALESCE / NULL handling
 List all orders showing Price, but display 0 if Price is NULL (COALESCE(Price, 0)).
 List traders with their trade count, showing 0 instead of NULL for traders with no trades (LEFT JOIN + COALESCE + COUNT).
@@ -113,10 +121,14 @@ Subqueries / Correlated queries
 Find traders whose average trade price is higher than the overall average trade price across all trades.
 For each instrument, find the single most recent trade (correlated subquery or window function).
 Find orders where the order's Price differs from the latest MarketPrice for that instrument by more than 1%.
+
+
 Transactions
 Write a transaction that inserts a new Order and a corresponding Trade, rolling back if the Trader's MaxOrderNotional would be exceeded (use BEGIN TRAN / COMMIT / ROLLBACK with a check).
 Write a transaction that updates an order's status to 'Cancelled' and deletes any pending (unfilled) trades tied to it, ensuring both happen atomically.
 Simulate a "trade booking" transaction: insert into Trades, update Order.Status, and if anything fails, ROLLBACK — wrap in TRY/CATCH (T-SQL) or equivalent.
+
+
 Bonus: Window functions / CTEs
 Rank trades per trader by ExecutedAt using ROW_NUMBER() OVER (PARTITION BY TraderId ORDER BY ExecutedAt DESC) and pull each trader's latest trade.
 Use a CTE to compute running total traded quantity per instrument over time.
