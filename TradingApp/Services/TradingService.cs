@@ -342,16 +342,14 @@ public class TradingService
 
     public object GetTradesWithTraderName()
     {
-        var trades = _context.Trades;
-
-        return trades
+        return _context
+            .Trades
+            .AsNoTracking()
             .Select(t => new
             {
-                t.Id,
-                t.TraderId,
-                TraderName = t.Trader.Name
-            })
-            .ToList();
+                TraderName = t.Trader.Name,
+                Trade = t.Id
+            });
     }
 
 
@@ -404,11 +402,7 @@ public class TradingService
 
     public List<Trade> GetEquityTrades()
     {
-        var trades = _context.Trades;
-
-        return trades
-            .Where(t => t.Instrument.AssetClass == AssetClassIds.Equity)
-            .ToList();
+        return _context.Trades.Where(t => t.Instrument.AssetClass == AssetClassIds.Equity).ToList();
     }
 
 
@@ -425,13 +419,19 @@ public class TradingService
     // Your task:
     // Make the database perform the filtering and COUNT.
 
-    public int GetTradeCountForTrader(int traderId)
+    public async Task<object> GetTradeCountForTrader(int traderId)
     {
         var trades = _context.Trades;
 
-        return trades
-            .Where(t => t.TraderId == traderId)
-            .Count();
+        return await trades
+            .AsNoTracking()
+            .GroupBy(t => t.TraderId)
+            .Select(g => new
+            {
+                TraderId = g.Key,
+                TradeCount = g.Count()
+            })
+            .ToListAsync();
     }
 
 
@@ -459,43 +459,58 @@ public class TradingService
     // + navigation properties
     // + SQL translation
 
-    public object GetTradeCountByTraderWithName()
+    public async Task<object> GetTradeCountByTraderWithName()
     {
-        var trades = _context.Trades.ToList();
-
-        return trades
-            .GroupBy(t => new
+        return await _context
+            .Trades
+            .GroupBy(g => new
             {
-                t.TraderId,
-                TraderName = t.Trader.Name
+                g.TraderId,
+                g.Trader.Name
             })
-            .Select(g => new
+            .Select(x => new
             {
-                TraderId = g.Key.TraderId,
-                TraderName = g.Key.TraderName,
-                TradeCount = g.Count()
+                TraderName = x.Key.Name,
+                TradeCount = x.Count()
             })
-            .OrderByDescending(x => x.TradeCount)
-            .ToList();
+            .OrderByDescending(t => t.TradeCount)
+            .ToListAsync();
     }
 
+//    var trades = _context.Trades.ToList();
 
-    // ============================================================
-    // EXERCISE 18
-    // The important one: IQueryable vs IEnumerable
-    // ============================================================
+//        return trades
+//            .GroupBy(t => new
+//            {
+//                t.TraderId,
+//                TraderName = t.Trader.Name
+//})
+//            .Select(g => new
+//            {
+//                TraderId = g.Key.TraderId,
+//                TraderName = g.Key.TraderName,
+//                TradeCount = g.Count()
+//            })
+//            .OrderByDescending(x => x.TradeCount)
+//            .ToList();
 
-    // ❌ BAD CODE
-    //
-    // Something has caused the query to execute before the
-    // filtering happens.
-    //
-    // Your task:
-    // Make the entire operation one SQL query.
-    //
-    // Think carefully about where ToList() belongs.
 
-    public List<string> GetUsdInstrumentSymbols()
+// ============================================================
+// EXERCISE 18
+// The important one: IQueryable vs IEnumerable
+// ============================================================
+
+// ❌ BAD CODE
+//
+// Something has caused the query to execute before the
+// filtering happens.
+//
+// Your task:
+// Make the entire operation one SQL query.
+//
+// Think carefully about where ToList() belongs.
+
+public List<string> GetUsdInstrumentSymbols()
     {
         var instruments = _context.Instruments;
 
@@ -527,19 +542,17 @@ public class TradingService
 
     public object GetEquityCountAndSymbols()
     {
-        var count = _context.Instruments
-            .Count(i => i.AssetClass == AssetClassIds.Equity);
+        var equityInstruments = _context
+            .Instruments
+            .Where(i => i.AssetClass == AssetClassIds.Equity);
 
-        var symbols = _context.Instruments
-            .Where(i => i.AssetClass == AssetClassIds.Equity)
-            .Select(i => i.Symbol)
-            .ToList();
-
-        return new
-        {
-            Count = count,
-            Symbols = symbols
-        };
+        return equityInstruments
+            .GroupBy(i => i.AssetClass)
+            .Select(g => new 
+            {
+                EquityInstrumentCount = g.Count(),
+                Symbols = g.Select(i => i.Symbol).ToList()
+            }).ToList().First();
     }
 
 
