@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingApp", "TradingApp\Tr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingApp.Tests", "TradingApp.Tests\TradingApp.Tests.csproj", "{DC40D13C-1D7B-455C-8A94-DBBEBAC5A982}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieAPI", "MovieAPI\MovieAPI.csproj", "{BB3C309E-ABEB-4417-8BE3-E2E27610AC25}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{DC40D13C-1D7B-455C-8A94-DBBEBAC5A982}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC40D13C-1D7B-455C-8A94-DBBEBAC5A982}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC40D13C-1D7B-455C-8A94-DBBEBAC5A982}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB3C309E-ABEB-4417-8BE3-E2E27610AC25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB3C309E-ABEB-4417-8BE3-E2E27610AC25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB3C309E-ABEB-4417-8BE3-E2E27610AC25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB3C309E-ABEB-4417-8BE3-E2E27610AC25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

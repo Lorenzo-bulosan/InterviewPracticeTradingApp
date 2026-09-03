@@ -92,6 +92,28 @@ Find traders who have executed more than 3 trades total (HAVING COUNT > 3).
 For each instrument, compute total traded quantity and average trade price; show only instruments with total quantity > some threshold.
 Find desks (group by Trader.Desk) where the combined MaxOrderNotional exceeds 3,000,000.
 
+*/
+
+-- Count the number of trades per trader.
+select
+ distinct TraderId,
+ count(Id)
+from Trades
+group by TraderId
+
+-- Count the number of orders per instrument, showing only instruments with more than 1 order.
+
+select 
+	distinct InstrumentId,
+	Count(*)
+from Orders
+group by InstrumentId
+having Count(*) > 1
+
+select * from Orders 
+
+
+/*
 
 INSERT
 Insert a new trader "Dana" on the "Crypto" desk with a MaxOrderNotional of 750,000.
