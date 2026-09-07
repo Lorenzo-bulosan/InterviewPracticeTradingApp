@@ -138,11 +138,11 @@ namespace MovieAPI.Solution
                     // we found the first occurrence of startYear
                     break;
                 }
-                else if (moviesFilteredByGenre[mid].Year < mid)
+                else if (moviesFilteredByGenre[mid].Year < startYear)
                 {
                     left = mid + 1;
                 }
-                else if(moviesFilteredByGenre[mid].Year > mid)
+                else if(moviesFilteredByGenre[mid].Year > startYear)
                 {
                     right = mid - 1;
                 }
@@ -170,11 +170,11 @@ namespace MovieAPI.Solution
                     // we found the LAST occurrence of endYear
                     break;
                 }
-                else if (moviesFilteredByGenre[mid].Year < mid)
+                else if (moviesFilteredByGenre[mid].Year < endYear)
                 {
                     left = mid + 1;
                 }
-                else if (moviesFilteredByGenre[mid].Year > mid)
+                else if (moviesFilteredByGenre[mid].Year > endYear)
                 {
                     right = mid - 1;
                 }
@@ -182,8 +182,8 @@ namespace MovieAPI.Solution
 
             var lastMovieAtEndYear = mid;
 
-            // return range
-            result = moviesFilteredByGenre.GetRange(firstMovieAtStartYear, lastMovieAtEndYear-firstMovieAtStartYear);
+            // return range - start, plus how many movies to return (last - first + 1). Important to add +1 because GetRange() is exclusive of the last index 
+            result = moviesFilteredByGenre.GetRange(firstMovieAtStartYear, lastMovieAtEndYear-firstMovieAtStartYear+1);
 
             //foreach (var movie in _movies)
             //{

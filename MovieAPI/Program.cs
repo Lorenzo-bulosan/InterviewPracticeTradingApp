@@ -9,7 +9,7 @@ namespace MovieAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddSingleton<MovieCatalog>();
+            builder.Services.AddScoped<MovieCatalog>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
