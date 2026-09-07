@@ -5,19 +5,19 @@ namespace MovieAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class Movie : ControllerBase
+    public class MovieController : ControllerBase
     {
-        private readonly ILogger<Movie> _logger;
+        private readonly ILogger<MovieController> _logger;
         private readonly MovieCatalog _movieCatalog;
 
-        public Movie(ILogger<Movie> logger, MovieCatalog movieCatalog)
+        public MovieController(ILogger<MovieController> logger, MovieCatalog movieCatalog)
         {
             _logger = logger;
             _movieCatalog = movieCatalog;
         }
 
-        [HttpGet("GetMovies")]
-        public ActionResult<List<Movie>> Get(string genre, int startYear, int endYear)
+        [HttpGet]
+        public ActionResult<List<Movie>> GetMovies(string genre, int startYear, int endYear)
         {
             try
             {
